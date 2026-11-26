@@ -1,0 +1,516 @@
+<USER_REQUEST>
+# Thermacity – Implement Three Advanced AI Features
+
+You are working on my existing project, **Thermacity – AI-Based Urban Heat Intelligence Platform**.
+
+I want to add three advanced features to the existing application:
+
+1. Heat Risk Forecasting
+2. Heat-Safe Route Finder
+3. Explainable Hotspot Comparison
+
+These features must be integrated into the existing application. Do not create a separate application or redesign the entire dashboard.
+
+## IMPORTANT DEVELOPMENT INSTRUCTIONS
+
+Before writing any code:
+
+1. Inspect the entire existing project structure.
+2. Understand the current frontend, backend, database, ML models, API endpoints and authentication.
+3. Identify the existing Hotspot Heatmap, Folium Map, Explainable AI, Digital Twin and Recommendations modules.
+4. Reuse existing components, design system, API services and ML models wherever possible.
+5. Identify which functionalities are already implemented and which need to be developed.
+6. Prepare a detailed implementation plan with the files that need to be created or modified.
+
+**Approval requirement:**
+- First present the implementation plan.
+- Explain the required datasets, algorithms, APIs and dependencies.
+- Wait for my approval before modifying files.
+- Implement one feature at a time.
+- After completing each feature, explain the changes and test results before proceeding to the next feature.
+
+Do not overwrite working functionalities.
+
+Do not use hardcoded sample predictions, fake API responses, random temperature values or placeholder charts.
+
+If actual data is unavailable, clearly indicate that the feature cannot generate a reliable result. Never present simulated values as real-world measurements.
+
+---
+
+# FEATURE 1: HEAT RISK FORECASTING
+
+## Objective
+
+Develop an ML-based forecasting module that predicts future Land Surface Temperature (LST) and identifies potential urban heat hotspots.
+
+The system should help administrators understand which districts or locations may experience increased heat risk.
+
+## 1. Dashboard Interface
+
+Create a new sidebar menu item:
+
+**Heat Forecasting**
+
+Design a professional forecasting dashboard consistent with the existing Thermacity UI.
+
+Include:
+
+- District selection dropdown.
+- Forecast period selection: 3 days, 7 days and 14 days.
+- Current observed temperature.
+- Predicted LST.
+- Heat risk classification.
+- Temperature trend chart.
+- Forecast confidence indicator.
+
+## 2. Prediction System
+
+Use an appropriate time-series forecasting or regression approach based on the available data.
+
+Potential input features:
+
+- Historical Land Surface Temperature.
+- Historical air temperature.
+- NDVI (vegetation).
+- NDBI (built-up index).
+- Solar thermal load.
+- Humidity.
+- Wind speed.
+- Precipitation.
+- Seasonal information.
+
+Evaluate suitable algorithms such as:
+
+- Random Forest Regression.
+- XGBoost.
+- LSTM (only if sufficient sequential data is available).
+
+Select the model based on validation performance rather than choosing an algorithm arbitrarily.
+
+Important:
+LST and air temperature are different measurements. Do not treat them as interchangeable.
+
+If satellite LST observations are unavailable for future dates, use weather forecasts and historical relationships to estimate future LST, and clearly label the output as a model-derived estimate.
+
+## 3. Forecast Visualization
+
+Display:
+
+- Historical temperature.
+- Current observed temperature.
+- Future predicted temperature.
+- Forecast uncertainty or prediction interval.
+
+Use an interactive line chart.
+
+Add a heat risk classification:
+
+- Low
+- Moderate
+- High
+- Extreme
+
+Keep thresholds configurable and document their source.
+
+## 4. Forecast Map
+
+Integrate the forecast into the existing Folium map.
+
+Requirements:
+
+- Show district-wise forecast heat levels.
+- Use different colors for risk categories.
+- Allow users to select a district.
+- Display forecast details when a location is selected.
+- Allow switching between current hotspots and forecast hotspots.
+
+## 5. Backend
+
+Create appropriate API endpoints for:
+
+- Retrieving forecast data.
+- Generating forecasts.
+- Retrieving historical temperature trends.
+- Retrieving forecast confidence and evaluation metrics.
+
+Cache expensive forecasting results where appropriate.
+
+---
+
+# FEATURE 2: HEAT-SAFE ROUTE FINDER
+
+## Objective
+
+Develop an intelligent route recommendation system that finds routes with lower estimated heat exposure rather than simply finding the shortest route.
+
+The system should help pedestrians select safer routes during hot weather.
+
+## 1. Dashboard Interface
+
+Create a new sidebar menu item:
+
+**Heat-Safe Routes**
+
+Design a clean route-planning interface.
+
+Include:
+
+- Starting location.
+- Destination.
+- Travel mode: Walking.
+- Departure time.
+- Find Safe Route button.
+
+Allow location selection through:
+- Search.
+- Map clicking.
+- Address selection.
+
+## 2. Routing Engine
+
+Use OpenStreetMap road and pedestrian network data.
+
+Investigate suitable routing solutions such as:
+
+- OSMnx.
+- NetworkX.
+- OpenRouteService, if an API key is configured.
+- OSRM, where appropriate for supported routing.
+
+Generate at least two route alternatives:
+
+1. Shortest Route.
+2. Heat-Safe Route.
+
+The shortest route should minimize distance or travel time.
+
+The heat-safe route should minimize estimated heat exposure.
+
+## 3. Heat Exposure Calculation
+
+Develop a route scoring algorithm.
+
+Potential factors:
+
+- LST along the route.
+- Vegetation density.
+- NDVI.
+- Tree canopy or shade availability, where reliable data exists.
+- Built-up density.
+- Road surface characteristics, where available.
+- Distance and estimated walking time.
+
+Create a configurable route cost function.
+
+For example:
+
+Route Cost =
+Weighted Heat Exposure +
+Distance Penalty +
+Low Vegetation Penalty +
+High Built-up Exposure Penalty.
+
+Do not assign arbitrary weights without documenting their rationale.
+
+Use available geospatial datasets and explain limitations when shade or tree canopy data is unavailable.
+
+## 4. Map Visualization
+
+Display the alternative routes on an interactive map.
+
+Requirements:
+
+- Starting and destination markers.
+- Shortest route.
+- Heat-safe route.
+- Route distance.
+- Estimated walking time.
+- Estimated cumulative heat exposure.
+- Average heat exposure.
+- Vegetation coverage along the route, if available.
+
+Use different line colors for each route.
+
+Allow users to click a route and view its detailed metrics.
+
+Add a comparison panel:
+
+| Metric | Shortest Route | Heat-Safe Route |
+| Distance | Actual | Actual |
+| Walking Time | Estimated | Estimated |
+| Heat Exposure | Estimated | Estimated |
+| Vegetation | Estimated | Estimated |
+
+Make the heat-safe route recommendation understandable to ordinary users.
+
+Important:
+Do not claim that a route is medically safe. Describe it as having lower estimated environmental heat exposure.
+
+If routing or geospatial data is unavailable, show a clear error rather than generating an imaginary route.
+
+---
+
+# FEATURE 3: EXPLAINABLE HOTSPOT COMPARISON
+
+## Objective
+
+Enhance the existing Explainable AI module by allowing users to compare two districts or hotspot locations and understand why one location is hotter than another.
+
+This feature must use actual model predictions and SHAP explanations.
+
+## 1. Dashboard Interface
+
+Create a new section inside the Explainable AI module:
+
+**Hotspot Comparison**
+
+Allow users to select:
+
+- Location A.
+- Location B.
+
+Use district or hotspot records already available in the database.
+
+Display both locations side by side.
+
+## 2. Comparison Metrics
+
+For both locations, show:
+
+- Predicted or observed LST.
+- NDVI.
+- NDBI.
+- Solar Thermal Load.
+- Water Proximity.
+- Concrete Surface.
+- Heat risk classification.
+
+Calculate the temperature difference:
+
+Temperature Difference = LST(A) - LST(B)
+
+Display which location has the higher temperature.
+
+## 3. SHAP Explainability
+
+Use the existing trained ML model and SHAP library.
+
+Do not create a separate artificial explanation system.
+
+Calculate SHAP values for both locations using the same model and appropriate background dataset.
+
+Show:
+
+1. SHAP Waterfall Plot for Location A.
+2. SHAP Waterfall Plot for Location B.
+3. SHAP Feature Importance Comparison.
+4. Feature Contribution Difference.
+
+Use the same feature order and units for both locations.
+
+Explain:
+
+- Which features increase LST.
+- Which features decrease LST.
+- Which features contribute most to the difference.
+- Why one location has a higher predicted LST.
+
+Example explanation:
+
+"Location A has a higher predicted LST primarily because of its higher built-up index and solar thermal load, while Location B benefits from greater vegetation coverage."
+
+Generate explanations dynamically from actual feature values and SHAP contributions. Do not hardcode this text.
+
+## 4. Visualization
+
+Include:
+
+- Side-by-side location cards.
+- Temperature comparison chart.
+- SHAP waterfall plots.
+- Feature contribution comparison chart.
+- Summary of major contributing factors.
+
+Use interactive visualizations consistent with the current application.
+
+## 5. Backend
+
+Create endpoints to:
+
+- Retrieve available comparison locations.
+- Retrieve location feature values.
+- Generate predictions using the existing model.
+- Calculate SHAP values.
+- Return comparison metrics and explanations.
+
+Ensure both locations use the same model version and preprocessing pipeline.
+
+---
+
+# TECHNICAL REQUIREMENTS
+
+## Frontend
+
+Continue using the existing frontend architecture.
+
+Preferred stack if already present:
+
+- React.
+- TypeScript.
+- Vite.
+- Tailwind CSS.
+- shadcn/ui.
+- Recharts.
+- Folium map integration or the existing map implementation.
+
+Requirements:
+
+- Responsive design.
+- Consistent sidebar and navigation.
+- Professional dashboard cards.
+- Interactive charts.
+- Loading indicators.
+- Error states.
+- Empty states.
+- Form validation.
+
+Do not introduce unnecessary UI libraries.
+
+## Backend
+
+Reuse the existing backend architecture.
+
+Preferred technologies if already present:
+
+- Python.
+- FastAPI.
+- Scikit-learn.
+- XGBoost.
+- SHAP.
+- Pandas.
+- NumPy.
+- GeoPandas.
+- OSMnx.
+- NetworkX.
+
+Use the existing database and authentication system.
+
+## Data Integration
+
+Use existing project datasets and available real data sources.
+
+Potential sources:
+
+- Google Earth Engine.
+- Landsat 8/9.
+- Sentinel-2.
+- ERA5.
+- OpenStreetMap.
+- Relevant weather forecast APIs.
+
+Do not download unnecessary datasets if equivalent data already exists.
+
+Keep data preprocessing consistent between training and inference.
+
+## Database
+
+Inspect the current database schema before making changes.
+
+Add tables or fields only when necessary.
+
+Store relevant information such as:
+
+- Forecast records.
+- Model version.
+- Forecast timestamps.
+- Route calculation metadata.
+- SHAP comparison results, if caching is needed.
+
+Avoid duplicate data storage.
+
+---
+
+# TESTING AND VALIDATION
+
+Test all three features.
+
+### Heat Risk Forecasting
+- Test different districts.
+- Test different forecast periods.
+- Validate model output.
+- Check missing data handling.
+- Evaluate prediction performance using appropriate metrics such as MAE and RMSE.
+
+### Heat-Safe Route Finder
+- Test different start and destination locations.
+- Verify route connectivity.
+- Check route distance calculations.
+- Verify heat exposure scoring.
+- Handle locations with missing environmental data.
+
+### Explainable Hotspot Comparison
+- Test two different locations.
+- Verify model predictions.
+- Verify SHAP values.
+- Ensure contributions add up consistently to the model prediction relative to the expected value.
+- Handle missing feature values.
+
+### General
+- Test API integration.
+- Test frontend/backend communication.
+- Check authentication and authorization.
+- Verify existing Thermacity modules still work.
+- Check browser console and backend logs.
+
+---
+
+# FINAL EXPECTED RESULT
+
+After implementation, Thermacity should support:
+
+1. Detecting existing urban heat hotspots.
+2. Forecasting future heat risk.
+3. Finding lower-heat-exposure walking routes.
+4. Explaining why a hotspot is hotter than another.
+5. Showing the environmental factors responsible for temperature differences.
+
+The three new features must be fully integrated into the existing Thermacity platform.
+
+## IMPORTANT FINAL RULES
+
+- No fake data.
+- No random predictions.
+- No hardcoded SHAP values.
+- No fake route calculations.
+- No static charts pretending to show live predictions.
+- No unnecessary redesign of existing modules.
+- No breaking existing functionalities.
+- No unverified claims about model accuracy.
+
+Prioritize a working, scientifically defensible implementation over visual complexity.
+
+At the end, provide:
+1. Files created and modified.
+2. Architecture changes.
+3. Dataset sources.
+4. Algorithms used and why.
+5. API endpoints added.
+6. Database changes.
+7. Model evaluation results.
+8. Testing results.
+9. Instructions to run the updated application.
+
+**Start by inspecting the project and presenting the implementation plan. Wait for my approval before coding.**
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-30T21:08:05+05:30.
+
+The user's current state is as follows:
+Active Document: c:\Users\KEERTHANA\OneDrive\Desktop\Projects\Thermacity\frontend\src\App.tsx (LANGUAGE_TSX)
+Cursor is on line: 1
+Other open documents:
+- c:\Users\KEERTHANA\OneDrive\Desktop\Projects\Thermacity\frontend\src\App.tsx (LANGUAGE_TSX)
+- c:\Users\KEERTHANA\OneDrive\Desktop\Projects\Thermacity\backend\app\ml\models.py (LANGUAGE_PYTHON)
+Running terminal commands:
+- npm run dev  (in c:\Users\KEERTHANA\OneDrive\Desktop\Projects\Thermacity\frontend, running for 21m33s)
+</ADDITIONAL_METADATA>

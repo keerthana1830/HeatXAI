@@ -1,0 +1,64 @@
+# Thermacity Project Report
+
+## 1. Problem Statement
+Urban areas are increasingly experiencing the "Urban Heat Island" (UHI) effect, leading to significantly higher temperatures compared to surrounding rural areas. This poses severe health risks, increases energy consumption, and reduces the quality of life for residents. Thermacity is designed to address this problem specifically for the state of Tamil Nadu by providing an "Urban Heat Intelligence Platform" for hotspot detection and formulating actionable cooling strategies.
+
+## 2. Solution
+Thermacity is a comprehensive, full-stack web application that combines geospatial mapping, predictive modeling, and community engagement to tackle urban heat. The platform provides:
+- **Interactive Heatmaps:** Visualizing land surface temperatures (LST) and urban heat hotspots across various districts.
+- **Predictive Analytics:** Forecasting future temperature trends using machine learning models to help in proactive urban planning.
+- **Community Suggestions:** A crowd-sourced module where citizens can propose and vote on cooling strategies.
+- **AI Chatbot:** An integrated Generative AI assistant to answer user queries regarding heat mitigation and platform insights.
+
+## 3. Tech Stack
+The project adopts a modern and scalable tech stack:
+
+### Frontend
+- **Framework:** React 19 with TypeScript, built using Vite.
+- **Styling:** Tailwind CSS for responsive and modern UI design.
+- **Maps:** Leaflet & React-Leaflet for interactive geospatial visualizations.
+- **Charting:** Recharts for data visualization (temperature trends).
+- **Routing:** React Router DOM.
+- **Icons:** Lucide React.
+- **Linting:** Oxlint for rapid code analysis.
+
+### Backend
+- **Framework:** FastAPI (Python) for high-performance REST APIs.
+- **Database:** MongoDB (via PyMongo) for flexible, document-based data storage.
+- **Background Tasks:** Celery with Redis as the message broker for asynchronous processing and model training.
+- **AI Integration:** Google Generative AI (`google-generativeai`) for the conversational chatbot.
+- **Geospatial & Data Processing:** Shapely, NumPy, Pandas.
+- **Authentication:** Python-Jose (JWT) and Passlib (Bcrypt) for secure user sessions.
+- **Testing:** PyTest for backend endpoints.
+- **Mapping:** Folium for generating backend-rendered maps.
+
+### Infrastructure
+- **Containerization:** Docker & Docker Compose to orchestrate frontend, backend, and background services.
+
+## 4. Algorithms
+- **Predictive Modeling (Time-Series Forecasting):** The application utilizes regression models (such as Random Forest Regressor) to predict future Land Surface Temperatures (LST) based on historical data. It incorporates min-max scaling and temporal split techniques.
+- **Spatial Analysis:** Algorithms to process and render geospatial geometries (polygons/points) for district-level heat mapping.
+- **Generative AI:** Leveraging Google's Gemini models for Natural Language Processing (NLP) to parse user queries and provide context-aware responses on climate issues.
+
+## 5. Outcomes & Output
+- **Actionable Insights:** City planners and administrators can view predicted heat spikes up to 12 months in advance.
+- **Citizen Engagement:** A curated list of most-voted community cooling projects (e.g., planting trees, reflective roofing).
+- **Visual Dashboards:** Easy-to-understand interactive maps and charts that democratize climate data.
+- **RESTful API:** A well-documented backend API ready for integration with third-party meteorological services.
+
+## 6. Performance Insights
+- **FastAPI:** Ensures asynchronous, high-throughput API responses, crucial for serving large spatial datasets.
+- **Vite + React:** Offers incredibly fast Hot Module Replacement (HMR) during development and optimized, minified bundles for production.
+- **Celery + Redis:** Offloads heavy machine learning training tasks to background workers, keeping the main API thread responsive.
+- **MongoDB:** Allows for fast reads on unstructured JSON-like geospatial and prediction data without complex SQL joins.
+
+## 7. Challenges
+- **Geospatial Data Handling:** Managing and efficiently transmitting large geospatial payloads (GeoJSON) between the database, backend, and frontend without causing browser lag.
+- **Model Training Overhead:** Training AI models dynamically requires significant computational resources, which was mitigated by introducing Celery for background processing.
+- **Data Integration:** Correlating historical land surface temperatures with diverse district topographies to generate accurate predictions.
+
+## 8. Novelty
+Thermacity stands out by merging deep technical analysis (predictive ML models and geospatial rendering) with civic engagement (upvoting community suggestions). Instead of just presenting data, it acts as an end-to-end intelligence platform that identifies the problem, predicts its future trajectory, and crowdsources the solution, all augmented by an AI-driven assistant.
+
+## 9. Conclusion
+Thermacity is a robust, scalable, and highly relevant platform addressing a critical modern climate issue. By leveraging an advanced tech stack—including React, FastAPI, Machine Learning, and Generative AI—it successfully bridges the gap between raw meteorological data and actionable urban planning, empowering both authorities and citizens to build cooler, more resilient cities in Tamil Nadu.
